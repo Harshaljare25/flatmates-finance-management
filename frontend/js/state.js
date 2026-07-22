@@ -2,6 +2,10 @@
  * State Management and Calculation Logic for Flatmates Finance System
  */
 
+// CHANGE THIS URL TO YOUR LIVE DEPLOYED RENDER BACKEND URL!
+// e.g. const BACKEND_API_URL = "https://your-backend-app.onrender.com/api/state";
+const BACKEND_API_URL = "https://flatmates-finance-management.onrender.com/api/state";
+
 const FinanceState = {
   // --- Raw Data ---
   flatmates: [],
@@ -43,7 +47,7 @@ const FinanceState = {
 
     // 2. Try to sync with background FastAPI server
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/state");
+      const response = await fetch(BACKEND_API_URL);
       if (response.ok) {
         const data = await response.json();
         this.flatmates = data.flatmates || this.flatmates;
@@ -80,7 +84,7 @@ const FinanceState = {
       settlements: this.settlements
     };
 
-    fetch("http://127.0.0.1:8000/api/state", {
+    fetch(BACKEND_API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(statePayload)
