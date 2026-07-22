@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FFM | Flatmates Finance Management</title>
+  <!-- footer inline SVG Favicon -->
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23E23E28'/><rect x='25' y='25' width='50' height='50' fill='%231A568D' opacity='0.7'/><polygon points='50,15 90,85 10,85' fill='%23FFC83B' opacity='0.7'/></svg>">
+  <!-- footer font - Space Grotesk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- App Container -->
+  <div class="app-grid">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-subtext">FLATMATES FINANCE</div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-btn active" data-target="dashboard">
+          <span class="nav-icon">■</span> DASHBOARD
+        </button>
+        <button class="nav-btn" data-target="expenses">
+          <span class="nav-icon">▲</span> EXPENSES
+        </button>
+        <button class="nav-btn" data-target="settlements">
+          <span class="nav-icon">●</span> SETTLEMENTS
+        </button>
+        <button class="nav-btn" data-target="bills">
+          <span class="nav-icon">◆</span> BILLS
+        </button>
+        <button class="nav-btn" data-target="flatmates">
+          <span class="nav-icon">▼</span> FLATMATES
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p>FLATMATES FINANCE V1.0</p>
+        <p>CREATED BY HARSHAL JARE</p>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- Top Header -->
+      <header class="main-header">
+        <div class="header-info">
+          <h2 id="section-title">DASHBOARD</h2>
+          <p id="current-date-str"></p>
+        </div>
+        <div class="header-alert-banner" id="header-alert">
+          <!-- Dynamically populated banner with quick stats -->
+          <span>Welcome back, flatmates. Keep balances settled!</span>
+        </div>
+      </header>
+
+      <!-- Content Container -->
+      <div class="content-wrapper">
+
+        <!-- ==============================================
+             DASHBOARD SECTION
+             ============================================== -->
+        <section id="dashboard" class="content-section active">
+          <!-- Overview Cards Grid -->
+          <div class="overview-grid">
+            <div class="card card-red">
+              <span class="card-deco">▲</span>
+              <div class="card-label">TOTAL POOL SPENT</div>
+              <div class="card-value" id="dash-total-spent">₹0.00</div>
+            </div>
+            <div class="card card-blue">
+              <span class="card-deco">■</span>
+              <div class="card-label">YOUR AVERAGE SHARE</div>
+              <div class="card-value" id="dash-avg-share">₹0.00</div>
+            </div>
+            <div class="card card-yellow">
+              <span class="card-deco">●</span>
+              <div class="card-label">ACTIVE BALANCE STATUS</div>
+              <div class="card-value" id="dash-net-status">ALL SETTLED</div>
+            </div>
+          </div>
+
+          <!-- Main Dashboard Split Layout -->
+          <div class="layout-split">
+            <!-- Left Side: Outstanding Debts -->
+            <div class="split-col col-6">
+              <div class="bauhaus-panel">
+                <div class="panel-header bg-black text-white">
+                  <h3>DEBT SIMPLIFICATION // WHO OWES WHOM</h3>
+                </div>
+                <div class="panel-body pad-all" id="debt-simplification-list">
+                  <!-- JS will render simplified debts here -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Side: Visual Analysis -->
+            <div class="split-col col-6">
+              <div class="bauhaus-panel margin-bottom">
+                <div class="panel-header bg-blue text-white">
+                  <h3>SPENDING BREAKDOWN BY CATEGORY</h3>
+                </div>
+                <div class="panel-body pad-all flex-center" id="category-chart-container">
+                  <!-- SVG Category Chart -->
+                </div>
+              </div>
+
+              <div class="bauhaus-panel">
+                <div class="panel-header bg-yellow text-black">
+                  <h3>TOTAL EXPENSES PAID BY MEMBER</h3>
+                </div>
+                <div class="panel-body pad-all" id="member-chart-container">
+                  <!-- SVG Member Bar Chart -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==============================================
+             EXPENSES SECTION
+             ============================================== -->
+        <section id="expenses" class="content-section">
+          <div class="section-actions">
+            <button class="btn btn-red btn-large" id="open-add-expense-modal">
+              + ADD NEW EXPENSE
+            </button>
+
+            <div class="filter-bar">
+              <div class="input-group">
+                <label>FILTER BY MEMBER</label>
+                <select id="expense-filter-member" class="select-bauhaus">
+                  <option value="all">ALL MEMBERS</option>
+                  <!-- Dynamically populated options -->
+                </select>
+              </div>
+              <div class="input-group">
+                <label>FILTER BY CATEGORY</label>
+                <select id="expense-filter-category" class="select-bauhaus">
+                  <option value="all">ALL CATEGORIES</option>
+                  <option value="Groceries">GROCERIES</option>
+                  <option value="Security Deposit">SECURITY DEPOSIT</option>
+                  <option value="Rent">RENT</option>
+                  <option value="Internet">INTERNET</option>
+                  <option value="Other">OTHER</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="bauhaus-panel">
+            <div class="panel-header bg-black text-white">
+              <h3>EXPENSE HISTORY LOG</h3>
+            </div>
+            <div class="panel-body">
+              <div class="table-responsive">
+                <table class="table-bauhaus">
+                  <thead>
+                    <tr>
+                      <th>DATE</th>
+                      <th>DESCRIPTION</th>
+                      <th>CATEGORY</th>
+                      <th>PAID BY</th>
+                      <th>SPLIT AMONG</th>
+                      <th>TOTAL AMOUNT</th>
+                      <th>ACTIONS</th>
+                    </tr>
+                  </thead>
+                  <tbody id="expense-history-table">
+                    <!-- Dynamic rendering of expenses -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==============================================
+             SETTLEMENTS SECTION
+             ============================================== -->
+        <section id="settlements" class="content-section">
+          <div class="section-actions">
+            <button class="btn btn-yellow btn-large" id="open-record-settlement-modal">
+              ✓ RECORD A PAYMENT
+            </button>
+          </div>
+
+          <div class="layout-split">
+            <!-- Left Side: Unsettled Debt Cards -->
+            <div class="split-col col-6">
+              <div class="bauhaus-panel">
+                <div class="panel-header bg-red text-white">
+                  <h3>DIRECT SETTLE RESOLUTION</h3>
+                </div>
+                <div class="panel-body pad-all" id="settlement-direct-list">
+                  <!-- Dynamically generated list of who needs to pay whom with a one-click settle button -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Side: Settlement Log -->
+            <div class="split-col col-6">
+              <div class="bauhaus-panel">
+                <div class="panel-header bg-black text-white">
+                  <h3>SETTLEMENT LOG HISTORY</h3>
+                </div>
+                <div class="panel-body">
+                  <div class="table-responsive">
+                    <table class="table-bauhaus">
+                      <thead>
+                        <tr>
+                          <th>DATE</th>
+                          <th>FROM (SENDER)</th>
+                          <th>TO (RECEIVER)</th>
+                          <th>AMOUNT</th>
+                          <th>ACTIONS</th>
+                        </tr>
+                      </thead>
+                      <tbody id="settlement-history-table">
+                        <!-- Dynamic settlements -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==============================================
+             BILLS SECTION
+             ============================================== -->
+        <section id="bills" class="content-section">
+          <div class="section-actions">
+            <button class="btn btn-blue btn-large" id="open-add-bill-modal">
+              + DEFINE HOUSEHOLD BILL
+            </button>
+          </div>
+
+          <div class="bills-grid" id="bills-list-grid">
+            <!-- Dynamic Bills list cards -->
+          </div>
+        </section>
+
+        <!-- ==============================================
+             FLATMATES SECTION
+             ============================================== -->
+        <section id="flatmates" class="content-section">
+          <div class="layout-split">
+            <!-- Add Flatmate Card -->
+            <div class="split-col col-4">
+              <div class="bauhaus-panel">
+                <div class="panel-header bg-black text-white">
+                  <h3>ADD NEW FLATMATE</h3>
+                </div>
+                <div class="panel-body pad-all">
+                  <form id="add-flatmate-form">
+                    <div class="form-group">
+                      <label for="flatmate-name-input">FULL NAME</label>
+                      <input type="text" id="flatmate-name-input" class="input-bauhaus" placeholder="e.g., Rahul Sharma"
+                        required autocomplete="off">
+                    </div>
+                    <button type="submit" class="btn btn-black btn-block">REGISTER MEMBER</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <!-- Flatmate List -->
+            <div class="split-col col-8">
+              <div class="bauhaus-panel">
+                <div class="panel-header bg-blue text-white">
+                  <h3>FLATMATE REGISTER & BALANCE SHEET</h3>
+                </div>
+                <div class="panel-body pad-all">
+                  <div class="flatmates-card-grid" id="flatmates-grid-container">
+                    <!-- Dynamic rendering of flatmate profiles -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ==============================================
+       MODALS SYSTEM
+       ============================================== -->
+
+  <!-- Backdrops overlay -->
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+
+  <!-- 1. Add Expense Modal -->
+  <div class="modal-bauhaus" id="add-expense-modal">
+    <div class="modal-header bg-red text-white">
+      <h2>ADD NEW EXPENSE</h2>
+      <button class="modal-close" data-close="add-expense-modal">×</button>
+    </div>
+    <div class="modal-body">
+      <form id="add-expense-form">
+        <div class="form-row">
+          <div class="form-group col-8">
+            <label for="exp-description">DESCRIPTION</label>
+            <input type="text" id="exp-description" class="input-bauhaus" placeholder="e.g., Grocery Shopping" required>
+          </div>
+          <div class="form-group col-4">
+            <label for="exp-category">CATEGORY</label>
+            <select id="exp-category" class="select-bauhaus" required>
+              <option value="Groceries">GROCERIES</option>
+              <option value="Security Deposit">SECURITY DEPOSIT</option>
+              <option value="Rent">RENT</option>
+              <option value="Internet">INTERNET</option>
+              <option value="Other">OTHER</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="exp-amount">AMOUNT (₹)</label>
+            <input type="number" id="exp-amount" min="1" step="any" class="input-bauhaus" placeholder="0.00" required>
+          </div>
+          <div class="form-group col-6">
+            <label for="exp-date">DATE</label>
+            <input type="date" id="exp-date" class="input-bauhaus" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="exp-paid-by">PAID BY</label>
+          <select id="exp-paid-by" class="select-bauhaus" required>
+            <!-- Dynamic options -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>SPLIT SETTINGS</label>
+          <div class="split-toggle-container">
+            <label class="split-radio">
+              <input type="radio" name="split-type" value="equal" checked>
+              <span>SPLIT EQUALLY</span>
+            </label>
+            <label class="split-radio">
+              <input type="radio" name="split-type" value="custom">
+              <span>SELECT MEMBERS</span>
+            </label>
+          </div>
+
+          <!-- Custom Split Checkboxes container -->
+          <div class="custom-split-container hide" id="custom-split-checkboxes">
+            <span class="split-instruction">Include members in this split:</span>
+            <div class="checkbox-grid" id="split-checkboxes-grid">
+              <!-- Dynamically populated checklist -->
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-red btn-block btn-large margin-top">ADD TO LEDGER</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Record Settlement Modal -->
+  <div class="modal-bauhaus" id="record-settlement-modal">
+    <div class="modal-header bg-yellow text-black">
+      <h2>RECORD A SETTLEMENT PAYMENT</h2>
+      <button class="modal-close" data-close="record-settlement-modal">×</button>
+    </div>
+    <div class="modal-body">
+      <form id="record-settlement-form">
+        <div class="form-group">
+          <label for="set-sender">FROM (DEBTOR WHO PAID)</label>
+          <select id="set-sender" class="select-bauhaus" required>
+            <!-- Dynamic options -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="set-receiver">TO (CREDITOR WHO RECEIVED)</label>
+          <select id="set-receiver" class="select-bauhaus" required>
+            <!-- Dynamic options -->
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="set-amount">AMOUNT (₹)</label>
+            <input type="number" id="set-amount" min="1" step="any" class="input-bauhaus" placeholder="0.00" required>
+          </div>
+          <div class="form-group col-6">
+            <label for="set-date">DATE</label>
+            <input type="date" id="set-date" class="input-bauhaus" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-yellow btn-block btn-large margin-top">RECORD SETTLEMENT</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. Add Bill Modal -->
+  <div class="modal-bauhaus" id="add-bill-modal">
+    <div class="modal-header bg-blue text-white">
+      <h2>DEFINE HOUSEHOLD BILL</h2>
+      <button class="modal-close" data-close="add-bill-modal">×</button>
+    </div>
+    <div class="modal-body">
+      <form id="add-bill-form">
+        <div class="form-group">
+          <label for="bill-name">BILL NAME / UTILITY</label>
+          <input type="text" id="bill-name" class="input-bauhaus" placeholder="e.g., High-speed Internet (July)"
+            required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="bill-amount">BILL AMOUNT (₹)</label>
+            <input type="number" id="bill-amount" min="1" step="any" class="input-bauhaus" placeholder="0.00" required>
+          </div>
+          <div class="form-group col-6">
+            <label for="bill-due-date">DUE DATE</label>
+            <input type="date" id="bill-due-date" class="input-bauhaus" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>BILL SPLITTERS</label>
+          <span class="split-instruction">Who is responsible for paying a share of this bill?</span>
+          <div class="checkbox-grid" id="bill-splitters-grid">
+            <!-- Dynamically populated checklist of all flatmates -->
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-blue btn-block btn-large margin-top">DEFINE BILL</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Pay Bill Modal (Triggered when marking a bill as paid) -->
+  <div class="modal-bauhaus" id="pay-bill-modal">
+    <div class="modal-header bg-yellow text-black">
+      <h2>MARK BILL AS PAID</h2>
+      <button class="modal-close" data-close="pay-bill-modal">×</button>
+    </div>
+    <div class="modal-body">
+      <form id="pay-bill-form">
+        <input type="hidden" id="pay-bill-id">
+        <p class="bill-summary-text" id="pay-bill-summary">
+          You are marking <strong>Internet Bill</strong> (₹1,500.00) as PAID.
+        </p>
+
+        <div class="form-group">
+          <label for="pay-bill-payer">WHO INITIALLY PAID THIS BILL?</label>
+          <select id="pay-bill-payer" class="select-bauhaus" required>
+            <!-- Dynamic options -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="pay-bill-date">DATE PAID</label>
+          <input type="date" id="pay-bill-date" class="input-bauhaus" required>
+        </div>
+
+        <button type="submit" class="btn btn-yellow btn-block btn-large margin-top">CONFIRM PAYMENT & CREATE
+          EXPENSE</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="js/state.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>
